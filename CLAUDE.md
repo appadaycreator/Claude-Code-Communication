@@ -15,5 +15,8 @@
 ./agent-send.sh [相手] "[メッセージ]"
 ```
 
+### ディレクトリ変更の自動展開
+PRESIDENT に `cd /path/to/repo` の形式でメッセージを送ると、boss1 と worker1～3 も同じコマンドを実行して作業ディレクトリを揃えます。
+
 ## 基本フロー
 PRESIDENT → boss1 → workers → boss1 → PRESIDENT 

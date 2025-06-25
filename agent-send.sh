@@ -128,7 +128,19 @@ main() {
     
     # メッセージ送信
     send_message "$target" "$message"
-    
+
+    # president が cd コマンドを送った場合は部下にも展開
+    if [[ "$agent_name" == "president" && "$message" =~ ^cd[[:space:]].* ]]; then
+        for sub in boss1 worker1 worker2 worker3; do
+            local sub_t
+            sub_t=$(get_agent_target "$sub")
+            if check_target "$sub_t"; then
+                send_message "$sub_t" "$message"
+                log_send "$sub" "$message"
+            fi
+        done
+    fi
+
     # ログ記録
     log_send "$agent_name" "$message"
     
@@ -137,4 +149,4 @@ main() {
     return 0
 }
 
-main "$@" 
+main "$@"

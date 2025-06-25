@@ -113,6 +113,8 @@ tmux attach-session -t multiagent
 
 # 例：作業者1に送る
 ./agent-send.sh worker1 "UIを作ってください"
+
+# ヒント：president に `cd /path/to/repo` を送ると boss1 と worker1～3 も同じディレクトリへ移動します
 ```
 
 ### 実際のやり取りの例
