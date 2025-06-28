@@ -4,6 +4,10 @@
 # 参考: setup_full_environment.sh
 
 set -e  # エラー時に停止
+
+# 端末サイズ取得（tmuxセッション作成時の"no space for new pane"対策）
+TERM_COLS=$(tput cols 2>/dev/null || echo 200)
+TERM_LINES=$(tput lines 2>/dev/null || echo 60)
 MODE=${1:-dev}
 if [[ "$MODE" != "dev" && "$MODE" != "ops" ]]; then
   echo "Usage: $0 [dev|ops]" >&2
@@ -45,7 +49,7 @@ echo ""
 if [[ "$MODE" == "dev" ]]; then
     # STEP 2: multiagentセッション作成（4ペイン：boss1 + worker1,2,3）
     log_info "📺 multiagentセッション作成開始 (4ペイン)..."
-    tmux new-session -d -s multiagent -n "agents"
+    tmux new-session -d -s multiagent -n "agents" -x "$TERM_COLS" -y "$TERM_LINES"
     tmux split-window -h -t "multiagent:0"
     tmux select-pane -t "multiagent:0.0"
     tmux split-window -v
@@ -70,7 +74,7 @@ if [[ "$MODE" == "dev" ]]; then
 
     # STEP 3: presidentセッション作成（1ペイン）
     log_info "👑 presidentセッション作成開始..."
-    tmux new-session -d -s president
+    tmux new-session -d -s president -x "$TERM_COLS" -y "$TERM_LINES"
     tmux send-keys -t president "cd $(pwd)" C-m
     tmux send-keys -t president "export PS1='(\[\033[1;35m\]PRESIDENT\[\033[0m\]) \[\033[1;32m\]\w\[\033[0m\]\$ '" C-m
     tmux send-keys -t president "echo '=== PRESIDENT セッション ==='" C-m
@@ -80,7 +84,7 @@ if [[ "$MODE" == "dev" ]]; then
 else
     # STEP 2: multiagentセッション作成（8ペイン：会社運営）
     log_info "📺 multiagentセッション作成開始 (8ペイン)..."
-    tmux new-session -d -s multiagent -n "agents"
+    tmux new-session -d -s multiagent -n "agents" -x "$TERM_COLS" -y "$TERM_LINES"
     for i in {1..7}; do
         tmux split-window -t "multiagent:0"
     done
@@ -99,7 +103,7 @@ else
 
     # STEP 3: ceoセッション作成
     log_info "👑 ceoセッション作成開始..."
-    tmux new-session -d -s president
+    tmux new-session -d -s president -x "$TERM_COLS" -y "$TERM_LINES"
     tmux send-keys -t president "cd $(pwd)" C-m
     tmux send-keys -t president "export PS1='(\033[1;35mCEO\033[0m) \033[1;32m\w\033[0m\$ '" C-m
     tmux send-keys -t president "echo '=== CEO セッション ==='" C-m
