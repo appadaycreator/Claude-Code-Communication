@@ -25,7 +25,8 @@
       "Bash(tmux list-windows:*)",
       "Bash(tmux send-keys:*)",
       "Bash(tmux list-panes:*)",
-      "Bash(tmux list-sessions:*)"
+      "Bash(tmux list-sessions:*)",
+      "Bash(tmux capture-pane:*)"
     ],
     "deny": []
   }
