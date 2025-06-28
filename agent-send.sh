@@ -4,17 +4,33 @@
 
 # 使用中のCLIを判定 (claude または gemini)
 CLI_MODE=$(cat .cli_mode 2>/dev/null || echo "claude")
+MODE=$(cat .mode 2>/dev/null || echo "dev")
 
 # エージェント→tmuxターゲット マッピング
 get_agent_target() {
-    case "$1" in
-        "president") echo "president" ;;
-        "boss1") echo "multiagent:0.0" ;;
-        "worker1") echo "multiagent:0.1" ;;
-        "worker2") echo "multiagent:0.2" ;;
-        "worker3") echo "multiagent:0.3" ;;
-        *) echo "" ;;
-    esac
+    if [[ "$MODE" == "dev" ]]; then
+        case "$1" in
+            "president") echo "president" ;;
+            "boss1") echo "multiagent:0.0" ;;
+            "worker1") echo "multiagent:0.1" ;;
+            "worker2") echo "multiagent:0.2" ;;
+            "worker3") echo "multiagent:0.3" ;;
+            *) echo "" ;;
+        esac
+    else
+        case "$1" in
+            "ceo") echo "president" ;;
+            "coo") echo "multiagent:0.0" ;;
+            "cfo") echo "multiagent:0.1" ;;
+            "cto") echo "multiagent:0.2" ;;
+            "hr_manager") echo "multiagent:0.3" ;;
+            "legal_expert") echo "multiagent:0.4" ;;
+            "accounting_manager") echo "multiagent:0.5" ;;
+            "tax_expert") echo "multiagent:0.6" ;;
+            "labor_expert") echo "multiagent:0.7" ;;
+            *) echo "" ;;
+        esac
+    fi
 }
 
 show_usage() {
@@ -26,11 +42,7 @@ show_usage() {
   $0 --list
 
 利用可能エージェント:
-  president - プロジェクト統括責任者
-  boss1     - チームリーダー  
-  worker1   - 実行担当者A
-  worker2   - 実行担当者B
-  worker3   - 実行担当者C
+  ※ --list オプションで現在のモードの一覧を表示
 
 使用例:
   $0 president "指示書に従って"
@@ -43,11 +55,23 @@ EOF
 show_agents() {
     echo "📋 利用可能なエージェント:"
     echo "=========================="
-    echo "  president → president:0     (プロジェクト統括責任者)"
-    echo "  boss1     → multiagent:0.0  (チームリーダー)"
-    echo "  worker1   → multiagent:0.1  (実行担当者A)"
-    echo "  worker2   → multiagent:0.2  (実行担当者B)" 
-    echo "  worker3   → multiagent:0.3  (実行担当者C)"
+    if [[ "$MODE" == "dev" ]]; then
+        echo "  president → president:0     (プロジェクト統括責任者)"
+        echo "  boss1     → multiagent:0.0  (チームリーダー)"
+        echo "  worker1   → multiagent:0.1  (実行担当者A)"
+        echo "  worker2   → multiagent:0.2  (実行担当者B)"
+        echo "  worker3   → multiagent:0.3  (実行担当者C)"
+    else
+        echo "  ceo              → president:0     (CEO)"
+        echo "  coo              → multiagent:0.0  (COO)"
+        echo "  cfo              → multiagent:0.1  (CFO)"
+        echo "  cto              → multiagent:0.2  (CTO)"
+        echo "  hr_manager       → multiagent:0.3  (HRマネージャー)"
+        echo "  legal_expert     → multiagent:0.4  (弁護士AI)"
+        echo "  accounting_manager → multiagent:0.5 (経理部長)"
+        echo "  tax_expert       → multiagent:0.6  (税理士AI)"
+        echo "  labor_expert     → multiagent:0.7  (社労士AI)"
+    fi
 }
 
 # ログ記録
@@ -134,9 +158,17 @@ main() {
     # メッセージ送信
     send_message "$target" "$message"
 
-    # president が cd コマンドを送った場合は部下にも展開
-    if [[ "$agent_name" == "president" && "$message" =~ ^cd[[:space:]].* ]]; then
-        for sub in boss1 worker1 worker2 worker3; do
+    # リーダーが cd コマンドを送った場合は部下にも展開
+    if [[ "$MODE" == "dev" ]]; then
+        leader="president"
+        subs=(boss1 worker1 worker2 worker3)
+    else
+        leader="ceo"
+        subs=(coo cfo cto hr_manager legal_expert accounting_manager tax_expert labor_expert)
+    fi
+
+    if [[ "$agent_name" == "$leader" && "$message" =~ ^cd[[:space:]].* ]]; then
+        for sub in "${subs[@]}"; do
             local sub_t
             sub_t=$(get_agent_target "$sub")
             if check_target "$sub_t"; then

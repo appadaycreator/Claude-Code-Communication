@@ -31,14 +31,16 @@ cd Claude-Code-Communication
 
 #### 2️⃣ 環境構築（1分）
 ```bash
-./setup.sh
+./setup.sh dev   # 開発会社モード
+./setup.sh ops   # 会社運営モード
 ```
 これでバックグラウンドに5つのターミナル画面が準備されます！
 
 #### 💡 ワンコマンドで全て起動したい場合
 ```bash
-./launch_all.sh claude   # 例: Claude Code を使用
-# ./launch_all.sh gemini  # Gemini CLI を使う場合
+./launch_all.sh claude dev   # 開発会社モード
+# ./launch_all.sh claude ops   # 会社運営モード
+# ./launch_all.sh gemini dev  # Gemini CLI を使う場合
 ```
 このコマンドは `setup.sh` と `start_agents.sh` をまとめて実行します。
 
@@ -106,6 +108,17 @@ tmux attach-session -t multiagent
 - **worker1**: デザイン担当（UI/UX）
 - **worker2**: データ処理担当
 - **worker3**: テスト担当
+
+### 🏢 会社運営モードのエージェント
+- **CEO_Agent**: 会社全体の戦略決定
+- **COO_Agent**: 業務執行の統括
+- **CFO_Agent**: 財務統括
+- **CTO_Agent**: 技術統括
+- **HR_Manager**: 採用・教育担当
+- **Legal_Expert**: 法務アドバイス
+- **Accounting_Manager**: 会計管理
+- **Tax_Expert**: 税務アドバイス
+- **Labor_Expert**: 労務管理
 
 ## 💬 どうやってコミュニケーションする？
 
@@ -241,7 +254,7 @@ emotiflow-mvp/
 tmux ls
 
 # 再起動
-./setup.sh
+./setup.sh dev  # または ops
 ```
 
 ### Q: メッセージが届かない
@@ -258,7 +271,7 @@ cat logs/send_log.txt
 # 全部リセット
 tmux kill-server
 rm -rf ./tmp/*
-./setup.sh
+./setup.sh dev  # または ops
 ```
 
 ## 🚀 自分のプロジェクトを作る
