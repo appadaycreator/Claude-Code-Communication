@@ -29,33 +29,24 @@ git clone https://github.com/appadaycreator/Claude-Code-Communication.git
 cd Claude-Code-Communication
 ```
 
-#### 2️⃣ 環境構築（1分）
+#### 2️⃣ ワンコマンド起動（1分）
 
-**開発会社モード（推奨）：**
+**開発モード（推奨）：**
 ```bash
-./setup_ops_horizontal.sh dev
+./start.sh dev claude   # Claude Code を使用
+./start.sh dev gemini   # Gemini CLI を使用
 ```
 
-**会社運営モード：**
+**企業運営モード：**
 ```bash
-./setup_ops_horizontal.sh ops
+./start.sh ops claude   # Claude Code を使用
+./start.sh ops gemini   # Gemini CLI を使用
 ```
 
 ※ 端末サイズが小さいと tmux のペイン作成に失敗することがあります。\
  その場合は大きめのウィンドウで実行してください。
 
-#### 3️⃣ AI CLI を一括起動（1分）
-
-**新しいターミナルを開いて：**
-```bash
-# 引数で claude または gemini を指定
-./start_all_agents_enhanced.sh claude   # 例: Claude Code を使用
-./start_all_agents_enhanced.sh gemini   # 例: Gemini CLI を使用
-```
-
-CLI は `.cli_mode` ファイルに記録され、`agent-send.sh` が自動的に読み取ります。
-
-#### 4️⃣ セッションに接続（1分）
+#### 3️⃣ セッションに接続（1分）
 
 **社長画面を開く：**
 ```bash
@@ -76,7 +67,7 @@ tmux attach-session -t agents
 └────────┴────────┴────────┴────────┘
 ```
 
-#### 5️⃣ 魔法の言葉を入力（30秒）
+#### 4️⃣ 魔法の言葉を入力（30秒）
 
 そして入力：
 ```
@@ -171,10 +162,11 @@ UIデザインの革新的アイデアを3つ以上提案してください。
 
 ## 📁 重要なファイルの説明
 
-### セットアップ・起動スクリプト
-- **`setup_ops_horizontal.sh`** - メインのセットアップスクリプト（8エージェント対応）
-- **`start_all_agents_enhanced.sh`** - 強化版起動スクリプト（自動再試行機能付き）
-- **`start_all_agents.sh`** - 基本起動スクリプト
+### 起動スクリプト
+- **`start.sh`** - ワンコマンド起動スクリプト（推奨）
+- **`setup_ops_horizontal.sh`** - セットアップ専用スクリプト
+- **`start_all_agents_enhanced.sh`** - 起動専用スクリプト（強化版）
+- **`start_all_agents.sh`** - 起動専用スクリプト（基本版）
 - **`setup_and_start.sh`** - 簡易セットアップ・起動スクリプト
 
 ### 指示書（instructions/）
@@ -264,7 +256,7 @@ emotiflow-mvp/
 tmux ls
 
 # 再起動
-./setup_ops_horizontal.sh dev  # または ops
+./start.sh dev claude  # または ops
 ```
 
 ### Q: メッセージが届かない
@@ -277,7 +269,7 @@ tmux ls
 ```bash
 # 全部リセット
 tmux kill-server
-./setup_ops_horizontal.sh dev  # または ops
+./start.sh dev claude  # または ops
 ```
 
 ## 🚀 自分のプロジェクトを作る
@@ -376,7 +368,7 @@ TODOアプリを作ってください。
 
 **新しい作業者を追加：**
 1. `instructions/worker4.md`を作成
-2. `setup_ops_horizontal.sh`を編集してペインを追加
+2. `start.sh`を編集してペインを追加
 3. `agent-send.sh`にマッピングを追加
 
 **タイマーを変更：**
@@ -398,7 +390,6 @@ sleep 300
 ---
 
 **ライセンス**: MIT
-
 
 ## 参考リンク
     
@@ -423,15 +414,7 @@ sleep 300
     
 ※以下の情報を参考に、今回のtmuxのClaude Code組織環境を構築することができました。本当にありがとうございました！☺️🙌   
     
-◇Claude Code双方向通信をシェルで一撃構築できるようにした発案者の元木さん   
-参考GitHub ：   
-haconiwa/README_JA.md at main · dai-motoki/haconiwa  
-　　URL: https://github.com/dai-motoki/haconiwa/blob/main/README_JA.md   
-    
-・神威/KAMUI（@kamui_qai）さん / X   
-　　URL: https://x.com/kamui_qai   
-    
-◇簡単にClaude Code双方向通信環境を構築できるようシェアして頂いたダイコンさん   
+◇Claude Code双方向通信をシェルで一撃構築できるようシェアして頂いたダイコンさん   
 参考GitHub：   
 nishimoto265/Claude-Code-Communication   
 　　URL: https://github.com/nishimoto265/Claude-Code-Communication   
