@@ -12,6 +12,12 @@ fi
 
 # 現在使用しているCLIを記録
 echo "$CMD" > .cli_mode
+MODE=$(cat .mode 2>/dev/null || echo "dev")
+if [[ "$MODE" == "dev" ]]; then
+  RANGE=3
+else
+  RANGE=7
+fi
 
 if tmux has-session -t president 2>/dev/null; then
   tmux send-keys -t president "$CMD" C-m
@@ -20,7 +26,7 @@ else
 fi
 
 if tmux has-session -t multiagent 2>/dev/null; then
-  for i in 0 1 2 3; do
+  for i in $(seq 0 $RANGE); do
     tmux send-keys -t multiagent:0.$i "$CMD" C-m
   done
 else
