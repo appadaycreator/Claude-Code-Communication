@@ -10,6 +10,9 @@ if [[ "$CMD" != "claude" && "$CMD" != "gemini" ]]; then
   exit 1
 fi
 
+# 現在使用しているCLIを記録
+echo "$CMD" > .cli_mode
+
 if tmux has-session -t president 2>/dev/null; then
   tmux send-keys -t president "$CMD" C-m
 else

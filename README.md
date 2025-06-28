@@ -59,6 +59,10 @@ tmux attach-session -t president
 ```
 ※ `launch_all.sh` を使った場合はこのステップを飛ばして構いません。
 
+CLI は `.cli_mode` ファイルに記録され、`agent-send.sh` が自動的に読み取ります。
+Gemini CLI の場合は Ctrl+C を送信しない仕様になり、president → boss1 の
+指示が正常に通ります。
+
 #### 5️⃣ 部下たちの画面を確認
 ・各画面で選択したCLIの認証が必要な場合あり
 ```bash
