@@ -2,6 +2,9 @@
 
 # 🚀 Agent間メッセージ送信スクリプト
 
+# 使用中のCLIを判定 (claude または gemini)
+CLI_MODE=$(cat .cli_mode 2>/dev/null || echo "claude")
+
 # エージェント→tmuxターゲット マッピング
 get_agent_target() {
     case "$1" in
@@ -63,10 +66,12 @@ send_message() {
     local message="$2"
     
     echo "📤 送信中: $target ← '$message'"
-    
-    # Claude Codeのプロンプトを一度クリア
-    tmux send-keys -t "$target" C-c
-    sleep 0.3
+
+    # Claude Codeは生成中にCtrl-Cで停止できるが、Geminiはプロセス終了してしまう
+    if [[ "$CLI_MODE" == "claude" ]]; then
+        tmux send-keys -t "$target" C-c
+        sleep 0.3
+    fi
     
     # メッセージ送信
     tmux send-keys -t "$target" "$message"
