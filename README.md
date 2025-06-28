@@ -25,63 +25,58 @@
 
 #### 1️⃣ ダウンロード（30秒）
 ```bash
-git clone https://github.com/nishimoto265/Claude-Code-Communication.git
+git clone https://github.com/appadaycreator/Claude-Code-Communication.git
 cd Claude-Code-Communication
 ```
 
 #### 2️⃣ 環境構築（1分）
+
+**開発会社モード（推奨）：**
 ```bash
-./setup.sh dev   # 開発会社モード
-./setup.sh ops   # 会社運営モード
+./setup_ops_horizontal.sh dev
 ```
+
+**会社運営モード：**
+```bash
+./setup_ops_horizontal.sh ops
+```
+
 ※ 端末サイズが小さいと tmux のペイン作成に失敗することがあります。\
  その場合は大きめのウィンドウで実行してください。
-これでバックグラウンドに5つのターミナル画面が準備されます！
 
-#### 💡 ワンコマンドで全て起動したい場合
+#### 3️⃣ AI CLI を一括起動（1分）
+
+**新しいターミナルを開いて：**
 ```bash
-./launch_all.sh claude dev   # 開発会社モード
-# ./launch_all.sh claude ops   # 会社運営モード
-# ./launch_all.sh gemini dev  # Gemini CLI を使う場合
+# 引数で claude または gemini を指定
+./start_all_agents_enhanced.sh claude   # 例: Claude Code を使用
+./start_all_agents_enhanced.sh gemini   # 例: Gemini CLI を使用
 ```
-このコマンドは `setup.sh` と `start_agents.sh` をまとめて実行します。
 
-#### 3️⃣ セッションに接続（1分）
+CLI は `.cli_mode` ファイルに記録され、`agent-send.sh` が自動的に読み取ります。
+
+#### 4️⃣ セッションに接続（1分）
 
 **社長画面を開く：**
 ```bash
 tmux attach-session -t president
 ```
 
-#### 4️⃣ AI CLI を一括起動（1分）
-
-**新しいターミナルを開いて：**
+**部下たちの画面を確認：**
 ```bash
-# 引数で claude または gemini を指定
-./start_agents.sh claude   # 例: Claude Code を使用
-./start_agents.sh gemini   # 例: Gemini CLI を使用
-```
-※ `launch_all.sh` を使った場合はこのステップを飛ばして構いません。
-
-CLI は `.cli_mode` ファイルに記録され、`agent-send.sh` が自動的に読み取ります。
-Gemini CLI の場合は Ctrl+C を送信しない仕様になり、president → boss1 の
-指示が正常に通ります。
-
-#### 5️⃣ 部下たちの画面を確認
-・各画面で選択したCLIの認証が必要な場合あり
-```bash
-tmux attach-session -t multiagent
-```
-これで4分割された画面が表示されます：
-```
-┌────────┬────────┐
-│ boss1  │worker1 │
-├────────┼────────┤
-│worker2 │worker3 │
-└────────┴────────┘
+tmux attach-session -t agents
 ```
 
-#### 6️⃣ 魔法の言葉を入力（30秒）
+これで8分割された画面が表示されます：
+```
+┌────────┬────────┬────────┬────────┐
+│ CEO    │ COO    │ CFO    │ CTO    │
+├────────┼────────┼────────┼────────┤
+│ HR     │ Legal  │ Tax    │ Labor  │
+└────────┴────────┴────────┴────────┘
+```
+
+#### 5️⃣ 魔法の言葉を入力（30秒）
 
 そして入力：
 ```
@@ -134,7 +129,11 @@ tmux attach-session -t multiagent
 # 例：作業者1に送る
 ./agent-send.sh worker1 "UIを作ってください"
 
-# ヒント：president に `cd /path/to/repo` を送ると boss1 と worker1～3 も同じディレクトリへ移動します
+# 一括送信（開発モード）
+./agent-send.sh all "全員にメッセージ"
+
+# 一括送信（企業運営モード）
+./agent-send.sh ops "企業運営に関する指示"
 ```
 
 ### 実際のやり取りの例
@@ -171,6 +170,12 @@ UIデザインの革新的アイデアを3つ以上提案してください。
 ```
 
 ## 📁 重要なファイルの説明
+
+### セットアップ・起動スクリプト
+- **`setup_ops_horizontal.sh`** - メインのセットアップスクリプト（8エージェント対応）
+- **`start_all_agents_enhanced.sh`** - 強化版起動スクリプト（自動再試行機能付き）
+- **`start_all_agents.sh`** - 基本起動スクリプト
+- **`setup_and_start.sh`** - 簡易セットアップ・起動スクリプト
 
 ### 指示書（instructions/）
 各エージェントの行動マニュアルです
@@ -211,19 +216,22 @@ UIデザインの革新的アイデアを3つ以上提案してください。
 3. 完了したら報告
 ```
 
-### CLAUDE.md
-システム全体の設定ファイル
-```markdown
-# Agent Communication System
+### 企業運営指示書（instructions_ops/）
+会社運営モード用の指示書です
 
-## エージェント構成
-- PRESIDENT: 統括責任者
-- boss1: チームリーダー  
-- worker1,2,3: 実行担当
+- **CEO_Agent.md** - CEOの指示書
+- **CFO_Agent.md** - CFOの指示書
+- **CTO_Agent.md** - CTOの指示書
+- **COO_Agent.md** - COOの指示書
+- **HR_Manager.md** - 人事マネージャーの指示書
+- **Legal_Expert.md** - 法務専門家の指示書
+- **Accounting_Manager.md** - 会計マネージャーの指示書
+- **Tax_Expert.md** - 税務専門家の指示書
+- **Labor_Expert.md** - 労務専門家の指示書
 
-## メッセージ送信
-./agent-send.sh [相手] "[メッセージ]"
-```
+### ユーティリティ
+- **`agent-send.sh`** - エージェント一括送信スクリプト
+- **`QUICK_START_IMPROVED.md`** - クイックスタートガイド
 
 ## 🎨 実際に作られたもの：EmotiFlow
 
@@ -256,14 +264,11 @@ emotiflow-mvp/
 tmux ls
 
 # 再起動
-./setup.sh dev  # または ops
+./setup_ops_horizontal.sh dev  # または ops
 ```
 
 ### Q: メッセージが届かない
 ```bash
-# ログを見る
-cat logs/send_log.txt
-
 # 手動でテスト
 ./agent-send.sh boss1 "テスト"
 ```
@@ -272,8 +277,7 @@ cat logs/send_log.txt
 ```bash
 # 全部リセット
 tmux kill-server
-rm -rf ./tmp/*
-./setup.sh dev  # または ops
+./setup_ops_horizontal.sh dev  # または ops
 ```
 
 ## 🚀 自分のプロジェクトを作る
@@ -297,7 +301,7 @@ TODOアプリを作ってください。
 
 ## 📊 システムの仕組み（図解）
 
-### 画面構成
+### 画面構成（開発モード）
 ```
 ┌─────────────────┐
 │   PRESIDENT     │ ← 社長の画面（紫色）
@@ -308,6 +312,15 @@ TODOアプリを作ってください。
 ├────────┼────────┤
 │worker2 │worker3 │ ← 作業者2と3（青）
 └────────┴────────┘
+```
+
+### 画面構成（企業運営モード）
+```
+┌────────┬────────┬────────┬────────┐
+│ CEO    │ COO    │ CFO    │ CTO    │
+├────────┼────────┼────────┼────────┤
+│ HR     │ Legal  │ Tax    │ Labor  │
+└────────┴────────┴────────┴────────┘
 ```
 
 ### コミュニケーションの流れ
@@ -321,15 +334,6 @@ TODOアプリを作ってください。
 マネージャー
  ↓ 「全員完了です」
 社長
-```
-
-### 進捗管理の仕組み
-```
-./tmp/
-├── worker1_done.txt     # 作業者1が完了したらできるファイル
-├── worker2_done.txt     # 作業者2が完了したらできるファイル
-├── worker3_done.txt     # 作業者3が完了したらできるファイル
-└── worker*_progress.log # 進捗の記録
 ```
 
 ## 💡 なぜこれがすごいの？
@@ -372,7 +376,7 @@ TODOアプリを作ってください。
 
 **新しい作業者を追加：**
 1. `instructions/worker4.md`を作成
-2. `setup.sh`を編集してペインを追加
+2. `setup_ops_horizontal.sh`を編集してペインを追加
 3. `agent-send.sh`にマッピングを追加
 
 **タイマーを変更：**
@@ -393,9 +397,7 @@ sleep 300
 
 ---
 
-**作者**: [GitHub](https://github.com/nishimoto265/Claude-Code-Communication)
 **ライセンス**: MIT
-**質問**: [Issues](https://github.com/nishimoto265/Claude-Code-Communication/issues)へどうぞ！
 
 
 ## 参考リンク
@@ -439,5 +441,4 @@ nishimoto265/Claude-Code-Communication
     
 ◇Claude Code公式解説動画：   
 Mastering Claude Code in 30 minutes - YouTube   
-　　URL: https://www.youtube.com/live/6eBSHbLKuN0?t=1356s  
-   
+　　URL: https://www.youtube.com/live/6eBSHbLKuN0?t=1356s
