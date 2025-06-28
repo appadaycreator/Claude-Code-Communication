@@ -35,6 +35,13 @@ cd Claude-Code-Communication
 ```
 これでバックグラウンドに5つのターミナル画面が準備されます！
 
+#### 💡 ワンコマンドで全て起動したい場合
+```bash
+./launch_all.sh claude   # 例: Claude Code を使用
+# ./launch_all.sh gemini  # Gemini CLI を使う場合
+```
+このコマンドは `setup.sh` と `start_agents.sh` をまとめて実行します。
+
 #### 3️⃣ セッションに接続（1分）
 
 **社長画面を開く：**
@@ -50,6 +57,7 @@ tmux attach-session -t president
 ./start_agents.sh claude   # 例: Claude Code を使用
 ./start_agents.sh gemini   # 例: Gemini CLI を使用
 ```
+※ `launch_all.sh` を使った場合はこのステップを飛ばして構いません。
 
 #### 5️⃣ 部下たちの画面を確認
 ・各画面で選択したCLIの認証が必要な場合あり
