@@ -19,7 +19,7 @@
 ### 必要なもの
 - Mac または Linux
 - tmux（ターミナル分割ツール）
-- Claude Code CLI
+- Gemini CLI または Claude Code CLI
 
 ### 手順
 
@@ -35,31 +35,24 @@ cd Claude-Code-Communication
 ```
 これでバックグラウンドに5つのターミナル画面が準備されます！
 
-#### 3️⃣ 社長画面を開いてAI起動（2分）
+#### 3️⃣ セッションに接続（1分）
 
 **社長画面を開く：**
 ```bash
 tmux attach-session -t president
 ```
 
-**社長画面でClaudeを起動：**
-```bash
-# ブラウザで認証が必要
-claude --dangerously-skip-permissions
-```
-
-#### 4️⃣ 部下たちを一括起動（1分）
+#### 4️⃣ AI CLI を一括起動（1分）
 
 **新しいターミナルを開いて：**
 ```bash
-# 4人の部下を一括起動
-for i in {0..3}; do 
-  tmux send-keys -t multiagent.$i 'claude --dangerously-skip-permissions' C-m
-done
+# 引数で claude または gemini を指定
+./start_agents.sh claude   # 例: Claude Code を使用
+./start_agents.sh gemini   # 例: Gemini CLI を使用
 ```
 
 #### 5️⃣ 部下たちの画面を確認
-・各画面でブラウザでのClaude認証が必要な場合あり
+・各画面で選択したCLIの認証が必要な場合あり
 ```bash
 tmux attach-session -t multiagent
 ```
@@ -379,8 +372,11 @@ sleep 300
 
 ## 参考リンク
     
-・Claude Code公式   
-　　URL: https://docs.anthropic.com/ja/docs/claude-code/overview   
+・Gemini CLI 公式ブログ
+　　URL: https://cloud.google.com/blog/ja/topics/developers-practitioners/introducing-gemini-cli
+
+・Claude Code公式
+　　URL: https://docs.anthropic.com/ja/docs/claude-code/overview
     
 ・Tmux Cheat Sheet & Quick Reference | Session, window, pane and more     
 　　URL: https://tmuxcheatsheet.com/   
