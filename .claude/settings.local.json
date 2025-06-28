@@ -10,7 +10,22 @@
       "Bash(*worker*_done.txt*)",
       "Bash(mkdir:*)",
       "Bash(then)",
-      "Bash(else)"
+      "Bash(else)",
+      "Bash(# 進捗管理用ディレクトリ作成\nmkdir -p ./tmp\n\n# 10分後に進捗確認を設定\n(sleep 600 && {\n    echo \"$(date): 進捗確認開始\"\n    if [ ! -f ./tmp/worker1_done.txt ] || [ ! -f ./tmp/worker2_done.txt ] || [ ! -f ./tmp/worker3_done.txt ]; then\n        echo \"未完了のworkerを確認中...\"\n        \n        [ ! -f ./tmp/worker1_done.txt ] && ./agent-send.sh worker1 \"進捗はいかがですか？UI/UXの革新的アイデア構築で困っていることがあれば共有してください。\"\n        [ ! -f ./tmp/worker2_done.txt ] && ./agent-send.sh worker2 \"進捗はいかがですか？バックエンドシステムの構築で困っていることがあれば共有してください。\"\n        [ ! -f ./tmp/worker3_done.txt ] && ./agent-send.sh worker3 \"進捗はいかがですか？AI機能の実装で困っていることがあれば共有してください。\"\n    fi\n}) &\n\necho \"進捗管理システムを起動しました。\")",
+      "Bash(# Worker1とWorker2の完了状況を記録\ntouch ./tmp/worker1_done.txt\ntouch ./tmp/worker2_done.txt\n\necho \"Worker1とWorker2の完了を記録しました。Worker3の完了を待機中...\"\n\n# Worker3の状況確認\nif [ ! -f ./tmp/worker3_done.txt ]; then\n    ./agent-send.sh worker3 \"Worker1とWorker2が素晴らしい成果を報告しました！あなたのAI・データ分析の革新的アイデアも楽しみにしています。進捗はいかがですか？\"\nfi)",
+      "Bash([ -f ./tmp/worker2_done.txt ])",
+      "Bash([ -f ./tmp/worker3_done.txt ])",
+      "Bash(then echo \"全員完了確認\")",
+      "Bash(else echo \"他worker待機中\")",
+      "Bash(fi)",
+      "Bash(# Worker3の完了を記録\ntouch ./tmp/worker3_done.txt\n\necho \"全Worker完了確認！天才的統合プロセス開始...\"\n\n# 全員完了確認\nif [ -f ./tmp/worker1_done.txt ] && [ -f ./tmp/worker2_done.txt ] && [ -f ./tmp/worker3_done.txt ]; then\n    echo \"✅ 全チーム完了 - 革新的統合フェーズに移行\"\n    echo \"20点→100点への完全昇華を開始します\"\nfi)",
+      "Bash(ls:*)",
+      "Bash(tmux list-sessions:*)",
+      "Bash(cat:*)",
+      "Bash(tmux list-windows:*)",
+      "Bash(tmux send-keys:*)",
+      "Bash(tmux list-panes:*)",
+      "Bash(tmux list-sessions:*)"
     ],
     "deny": []
   }

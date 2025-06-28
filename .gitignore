@@ -19,3 +19,12 @@ Thumbs.db
 .vscode/
 .idea/ 
 .mode
+node_modules
+
+# projectディレクトリの内容（生成物）
+project/*
+!project/.gitkeep
+
+# 個人設定ファイル
+.ai_cmd
+.cli_mode
